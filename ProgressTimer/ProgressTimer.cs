@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Threading;
+﻿using System.ComponentModel;
 
 namespace NetEti.ApplicationControl
 {
@@ -68,7 +66,7 @@ namespace NetEti.ApplicationControl
 
         #region public members
 
-        private ProgressChangedEventHandler _progressChanged;
+        private ProgressChangedEventHandler? _progressChanged;
         /// <summary>
         /// Ereignis das eintritt, wenn sich der Gesamtfortschritt ändert.
         /// </summary>
@@ -95,18 +93,18 @@ namespace NetEti.ApplicationControl
         /// <summary>
         /// Ereignis das eintritt, wenn die Verarbeitung für diesen ProgressTimer beendet ist.
         /// </summary>
-        public event ProgressChangedEventHandler ProgressFinished;
+        public event ProgressChangedEventHandler? ProgressFinished;
 
         /// <summary>
         /// Die Verarbeitung für diesen ProgressTimer.
         /// </summary>
-        public DoWorkEventHandler WorkingRoutine;
+        public DoWorkEventHandler? WorkingRoutine;
 
         /// <summary>
         /// Bezeichner für die zugrundeliegende Verarbeitung.
         /// Wird in ProgressChangedEventArgs als userState-Object mitgegeben.
         /// </summary>
-        public string ProcessName { get; set; }
+        public string? ProcessName { get; set; }
 
         /// <summary>
         /// Legt fest, wieviel Raum diese Verarbeitung im Verhältnis zu anderen
@@ -172,7 +170,10 @@ namespace NetEti.ApplicationControl
                     {
                         _asyncMethod aM1 = new _asyncMethod(invokeTimerAsync);
                         this._timerStop = false;
-                        IAsyncResult iar = aM1.BeginInvoke(null, null);
+
+                        // IAsyncResult iar = aM1.BeginInvoke(null, null);
+                        var workTask = Task.Run(() => aM1.Invoke());
+
                         this.AllPercentDone = (int)(
                             (this.LeftBranchWeight - this.Weight) * toHundred
                             + 0.5);
@@ -187,7 +188,10 @@ namespace NetEti.ApplicationControl
                             this._isFinishing = true;
                             _asyncMethod aM2 = new _asyncMethod(invokeTimerAsync);
                             this._timerStop = false;
-                            IAsyncResult iar = aM2.BeginInvoke(null, null);
+
+                            // IAsyncResult iar = aM2.BeginInvoke(null, null);
+                            var workTask = Task.Run(() => aM2.Invoke());
+
                             this.AllPercentDone = (int)(
                                 (this.LeftBranchWeight - this.Weight) * toHundred
                                 + this.Head * toThisWeight * toHundred
@@ -422,8 +426,8 @@ namespace NetEti.ApplicationControl
 
         #region private members
 
-        private ProgressTimer _predecessor;
-        private ProgressTimer _successor;
+        private ProgressTimer? _predecessor;
+        private ProgressTimer? _successor;
 
         volatile private bool _timerStop;
         private bool _isStarting;
@@ -503,7 +507,7 @@ namespace NetEti.ApplicationControl
 
         private void OnProgressChanged(string additionalInfo)
         {
-            string info = this.ProcessName;
+            string? info = this.ProcessName;
             if (!String.IsNullOrEmpty(additionalInfo))
             {
                 info += " (" + additionalInfo + ")";

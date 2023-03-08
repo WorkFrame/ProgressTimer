@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Windows.Forms;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using NetEti.ApplicationControl;
 
 namespace NetEti.DemoApplications
@@ -75,6 +72,8 @@ namespace NetEti.DemoApplications
             this._backgroundWorker.DoWork += this._all_Jobs_DoWorkEventHandler; // Der BackgroundWorker wird auf Job 1 eingestellt.
             this._backgroundWorker.RunWorkerCompleted += this.All_Jobs_ProgressFinished;
 
+            this._activeProgressTimer = this._progressTimer_1;
+            this.lastProgressChangedEventArgs = new ProgressChangedEventArgs(0, null);
         }
 
         private void btnStartAll_Click(object sender, EventArgs e)
@@ -97,7 +96,7 @@ namespace NetEti.DemoApplications
             }
         }
 
-        private void All_Jobs_DoWork(object sender, DoWorkEventArgs e)
+        private void All_Jobs_DoWork(object? sender, DoWorkEventArgs e)
         {
             // Hier wird der erste der verketteten Jobs gestartet (Job 1).
             // Ist dieser ohne Fehler oder Abbruch beendet, startet er
@@ -105,7 +104,7 @@ namespace NetEti.DemoApplications
             this._progressTimer_1.Start();
         }
 
-        private void BackgroundWorker_DoJob_1(object sender, DoWorkEventArgs e)
+        private void BackgroundWorker_DoJob_1(object? sender, DoWorkEventArgs e)
         {
             this._activeProgressTimer = this._progressTimer_1;
 
@@ -121,7 +120,7 @@ namespace NetEti.DemoApplications
             // throw new ApplicationException("Testexception");
         }
 
-        private void BackgroundWorker_DoJob_2(object sender, DoWorkEventArgs e)
+        private void BackgroundWorker_DoJob_2(object? sender, DoWorkEventArgs e)
         {
             this._activeProgressTimer = this._progressTimer_2;
 
@@ -133,7 +132,7 @@ namespace NetEti.DemoApplications
             } while (percentDone++ < 100);
         }
 
-        private void BackgroundWorker_DoJob_3(object sender, DoWorkEventArgs e)
+        private void BackgroundWorker_DoJob_3(object? sender, DoWorkEventArgs e)
         {
             this._activeProgressTimer = this._progressTimer_3;
 
@@ -148,18 +147,18 @@ namespace NetEti.DemoApplications
             Thread.Sleep(5000);
         }
 
-        private void ProgressTimer_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void ProgressTimer_ProgressChanged(object? sender, ProgressChangedEventArgs e)
         {
             this.lastProgressChangedEventArgs = e;
             this.OnProgressChanged(sender, e);
         }
 
-        private void ProgressTimer_ProgressFinished(object sender, ProgressChangedEventArgs e)
+        private void ProgressTimer_ProgressFinished(object? sender, ProgressChangedEventArgs e)
         {
             // Ende einer Einzelverarbeitung, normalerweise muss hier nichts gemacht werden.
         }
 
-        private void All_Jobs_ProgressFinished(object sender, RunWorkerCompletedEventArgs e)
+        private void All_Jobs_ProgressFinished(object? sender, RunWorkerCompletedEventArgs e)
         {
             // Hier endet die Verarbeitung des BackroundWorkers, also die Verarbeitung aller Jobs.
             if (e.Error != null)
@@ -179,18 +178,24 @@ namespace NetEti.DemoApplications
             }
         }
 
-        private void OnProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void OnProgressChanged(object? sender, ProgressChangedEventArgs e)
         {
+#pragma warning disable CS8604 // Mögliches Nullverweisargument.
             this.UpdateProgressBarAndLabel(e.ProgressPercentage, (e.UserState ?? "").ToString());
+#pragma warning restore CS8604 // Mögliches Nullverweisargument.
         }
 
-        private void OnProgressFinished(object sender, ProgressChangedEventArgs e)
+        private void OnProgressFinished(object? sender, ProgressChangedEventArgs e)
         {
+#pragma warning disable CS8602 // Dereferenzierung eines möglichen Nullverweises.
             string endMessage = (e.UserState ?? "").ToString().PadRight(60).Substring(0, 60).TrimEnd();
+#pragma warning restore CS8602 // Dereferenzierung eines möglichen Nullverweises.
             this.UpdateProgressBarAndLabel(e.ProgressPercentage, endMessage);
             if (e.UserState is Exception)
             {
+#pragma warning disable CS8602 // Dereferenzierung eines möglichen Nullverweises.
                 MessageBox.Show(String.Format($"{(e.UserState as Exception).Message}", "Task-Exception", MessageBoxButtons.OK, MessageBoxIcon.Error));
+#pragma warning restore CS8602 // Dereferenzierung eines möglichen Nullverweises.
                 this.btnStartAll.Enabled = true;
                 this.closeAllowed = true;
             }
