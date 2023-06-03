@@ -12,6 +12,14 @@
     <Company>NetEti</Company>
     <Description>Assembly für gemeinsamen Verarbeitungsfortschritt für mehrere Teil-Prozesse inkl. Timer für Verzögerungen an Prozess-Start und -Ende</Description>
     <Copyright>Copyright © $(Authors) 2016-2023</Copyright>
+    <AssemblyVersion>7.0.1.0</AssemblyVersion>
+    <FileVersion>7.0.1.0</FileVersion>
+    <PackageTags>NetEti Framework ProgressBar Sharing</PackageTags>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <AssemblyRoot>$(ProjectDir)../../../ReadyBin/Assemblies</AssemblyRoot>
+  </PropertyGroup>
+  <Import Project="$(ProjectDir)../../AddOn/proj/*" Condition="exists('$(ProjectDir)../../AddOn/proj')" />
 
 </Project>

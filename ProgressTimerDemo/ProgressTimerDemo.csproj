@@ -13,6 +13,8 @@
     <Description>$(AssemblyName) - Demoprogramm</Description>
     <Copyright>Copyright © $(Authors) 2016-2023</Copyright>
     <AssemblyName>NetEti.$(MSBuildProjectName)</AssemblyName>
+    <AssemblyVersion>7.0.1.0</AssemblyVersion>
+    <FileVersion>7.0.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
