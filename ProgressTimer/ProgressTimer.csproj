@@ -11,7 +11,7 @@
     <Authors>Erik Nagel</Authors>
     <Company>NetEti</Company>
     <Description>Assembly für gemeinsamen Verarbeitungsfortschritt für mehrere Teil-Prozesse inkl. Timer für Verzögerungen an Prozess-Start und -Ende</Description>
-    <Copyright>Copyright © $(Authors) 2016-2023</Copyright>
+    <Copyright>Copyright © $(Authors) 2016-$([System.DateTime]::Now.Year)</Copyright>
     <AssemblyVersion>8.0.0.0</AssemblyVersion>
     <FileVersion>8.0.0.0</FileVersion>
     <PackageTags>NetEti Framework ProgressBar Sharing</PackageTags>
